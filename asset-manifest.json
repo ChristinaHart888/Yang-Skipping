@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Yang-Skipping/static/css/main.073c9b0a.css",
+    "main.js": "/Yang-Skipping/static/js/main.cb723d01.js",
+    "static/js/787.2d393991.chunk.js": "/Yang-Skipping/static/js/787.2d393991.chunk.js",
+    "index.html": "/Yang-Skipping/index.html",
+    "main.073c9b0a.css.map": "/Yang-Skipping/static/css/main.073c9b0a.css.map",
+    "main.cb723d01.js.map": "/Yang-Skipping/static/js/main.cb723d01.js.map",
+    "787.2d393991.chunk.js.map": "/Yang-Skipping/static/js/787.2d393991.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.cb723d01.js"
+  ]
+}
