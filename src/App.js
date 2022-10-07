@@ -34,7 +34,7 @@ function App() {
       <section>
         <div className="App">
           <div className="main">
-            { user ? <Main/> : <Login/>}
+            { user ? <Main/> : <LoginPage/>}
           </div>
         </div>
       </section>
@@ -48,17 +48,22 @@ function Main(){
 
   const countcoll = firestore.collection("numberofskips");
 
-  const [numOfSkips, setNumOfSkip] = useState();
+  const [numOfSkips, setNumOfSkip] = useState('');
   const [imageAsFile, setImageAsFile] = useState('');
   const [imageAsUrl, setImageAsUrl] = useState({imgUrl: ''});
+  const [uploading, setUploading] = useState(false);
 
   const name = auth.currentUser.displayName;
   const email = auth.currentUser.email;
+  const uid = auth.currentUser.uid;
+
+  const history = countcoll.where("userID", "==", uid)
+  const [skips] = useCollectionData(history, {idField: 'id'});
+  const [rows, setRows] = useState([]);
 
   const uploadRecord = async(e) => {
     e.preventDefault();
-    const uid = auth.currentUser.uid;
-
+    setUploading(true);
     handleFirebaseUpload()
     .then(() => {
       countcoll.add({
@@ -79,12 +84,38 @@ function Main(){
     if(imageAsFile === ''){
       console.log('No File');
     }else{
-      const uploadTask = storage.ref(`/images/${email}/${imageAsFile.name}`).put(imageAsFile);
+      const uploadTask = await storage.ref(`/images/${email}/${imageAsFile.name}`).put(imageAsFile);
+      console.log(uploadTask);
+      setUploading(false);
+      alert("Done")
     }
+  }
+
+  const populateTest = () => {
+    let prevDate = "";
+    let sum = 0;
+    let dates = [];
+    
+    for(let i = 0; i < skips.length; i++){
+      console.log(skips[i].date.toDate())
+      let newDate = skips[i].date.toDate().toDateString();
+      let found = dates.filter((item) => {return(item.date === newDate)});
+      if(found.length > 0){
+        let index = dates.findIndex((item => item.date === newDate))
+        dates[index].count += parseInt(skips[i].count)
+      }else{
+        sum = parseInt(skips[i].count);
+        dates.push({date: newDate, count: sum});
+        
+      }
+
+    }
+    setRows(dates)
   }
 
   useEffect(() => {
     console.log(imageAsFile)
+    
   }, [imageAsFile])
 
   return(
@@ -96,7 +127,14 @@ function Main(){
         <label>Please take a picture of your counter as proof.</label><br></br>
         <input type="file" onChange={uploadImageHandler}></input><br></br>
         <button type='submit' style={{padding: "0.75em 0.5em", fontWeight: "bold", margin: "1em"}}>Submit</button>
+        {uploading && <small>Uploading...Please do not leave the page.</small>}
       </form>
+      <button onClick={populateTest}>View History</button>
+        <div className="hist">
+          {rows && rows.map(row => 
+            <p key={row.date}>{row.date}, {row.count}</p>
+          )}
+        </div>
     </div>
   )
 }
@@ -127,7 +165,15 @@ function Login(){
     auth.signInWithPopup(provider);
   }
   return(
-    <button onClick={signInWithGoogle}>Sign In With Google</button>
+      <button onClick={signInWithGoogle} style={{padding: "0.75em 1em"}}>Sign In With Google</button>
+  )
+}
+
+function LoginPage(){
+  return(
+    <div style={{height: "100vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
+      <Login/>
+    </div>
   )
 }
 
