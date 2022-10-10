@@ -119,14 +119,14 @@ function Main(){
   return(
     <div style={{justifyContent: 'center', alignContent: 'center', backgroundColor: "#eee", width: "60%", margin:"1em auto", padding: "1em"}}>
       <h1>Hello, {name}</h1>
-      <form onSubmit={uploadRecord}>
+      <div onSubmit={uploadRecord}>
         <label>How many times did you skip today?</label><br></br>
         <input type="number" value={numOfSkips} onChange={e => setNumOfSkip(e.target.value)}></input><br></br>
         <label>Please take a picture of your counter as proof.</label><br></br>
         <input type="file" onChange={uploadImageHandler}></input><br></br>
         <button type='submit' style={{padding: "0.75em 0.5em", fontWeight: "bold", margin: "1em"}}>Submit</button>
         {uploading && <small>Uploading...Please do not leave the page.</small>}
-      </form>
+      </div>
       <button onClick={populateTest}>View History</button>
         <div className="hist">
           {rows && rows.map(row => 
