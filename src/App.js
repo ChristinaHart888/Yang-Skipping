@@ -63,14 +63,20 @@ function Main(){
   const uploadRecord = async(e) => {
     e.preventDefault();
     setUploading(true);
-    handleFirebaseUpload()
-    .then(() => {
-      countcoll.add({
-        count: numOfSkips,
-        date: firebase.firestore.FieldValue.serverTimestamp(),
-        userID: uid
+    if(imageAsFile !== ""){
+      handleFirebaseUpload()
+      .then(() => {
+        countcoll.add({
+          count: numOfSkips,
+          date: firebase.firestore.FieldValue.serverTimestamp(),
+          userID: uid
+        })
       })
-    })
+    }else{
+      alert("Please add a picture of your counter as proof!");
+      setUploading(false);
+    }
+    
     
   }
 
@@ -81,12 +87,14 @@ function Main(){
 
   const handleFirebaseUpload = async() => {
     if(imageAsFile === ''){
-      console.log('No File');
+      alert("Please add a picture of your counter as proof!");
+      setUploading(false);
     }else{
       const uploadTask = await storage.ref(`/images/${email}/${imageAsFile.name}`).put(imageAsFile);
       console.log(uploadTask);
       setUploading(false);
-      alert("Done")
+      alert("Done");
+      window.location.href = "/";
     }
   }
 
@@ -119,13 +127,13 @@ function Main(){
   return(
     <div style={{justifyContent: 'center', alignContent: 'center', backgroundColor: "#eee", width: "60%", margin:"1em auto", padding: "1em"}}>
       <h1>Hello, {name}</h1>
-      <div onSubmit={uploadRecord}>
+      <div>
         <label>How many times did you skip today?</label><br></br>
-        <input type="number" value={numOfSkips} onChange={e => setNumOfSkip(e.target.value)}></input><br></br>
+        <input type="number" value={numOfSkips} onChange={e => setNumOfSkip(e.target.value)} required></input><br></br>
         <label>Please take a picture of your counter as proof.</label><br></br>
-        <input type="file" onChange={uploadImageHandler}></input><br></br>
-        <button type='submit' style={{padding: "0.75em 0.5em", fontWeight: "bold", margin: "1em"}}>Submit</button>
-        {uploading && <small>Uploading...Please do not leave the page.</small>}
+        <input type="file" onChange={uploadImageHandler} required></input><br></br>
+        
+        {uploading ? <small>Uploading...Please do not leave the page.</small> : <button type='submit' style={{padding: "0.75em 0.5em", fontWeight: "bold", margin: "1em"}} onClick={uploadRecord}>Submit</button>}
       </div>
       <button onClick={populateTest}>View History</button>
         <div className="hist">
