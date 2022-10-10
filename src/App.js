@@ -50,7 +50,6 @@ function Main(){
 
   const [numOfSkips, setNumOfSkip] = useState('');
   const [imageAsFile, setImageAsFile] = useState('');
-  const [imageAsUrl, setImageAsUrl] = useState({imgUrl: ''});
   const [uploading, setUploading] = useState(false);
 
   const name = auth.currentUser.displayName;
@@ -92,7 +91,6 @@ function Main(){
   }
 
   const populateTest = () => {
-    let prevDate = "";
     let sum = 0;
     let dates = [];
     
