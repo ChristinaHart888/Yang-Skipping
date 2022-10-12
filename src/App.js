@@ -65,11 +65,15 @@ function Main(){
     setUploading(true);
     if(imageAsFile !== ""){
       handleFirebaseUpload()
-      .then(() => {
+      .then((result) => {
+        console.log("Result: ", result)
         countcoll.add({
           count: numOfSkips,
           date: firebase.firestore.FieldValue.serverTimestamp(),
-          userID: uid
+          userID: uid,
+          path: result
+        }).then(() => {
+          window.location.href = "/";
         })
       })
     }else{
@@ -91,10 +95,9 @@ function Main(){
       setUploading(false);
     }else{
       const uploadTask = await storage.ref(`/images/${email}/${imageAsFile.name}`).put(imageAsFile);
-      console.log(uploadTask);
       setUploading(false);
       alert("Done");
-      window.location.href = "/";
+      return uploadTask.metadata.fullPath;
     }
   }
 
