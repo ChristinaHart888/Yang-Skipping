@@ -80,8 +80,6 @@ function Main(){
       alert("Please add a picture of your counter as proof!");
       setUploading(false);
     }
-    
-    
   }
 
   const uploadImageHandler = (e) => {
@@ -106,7 +104,6 @@ function Main(){
     let dates = [];
     
     for(let i = 0; i < skips.length; i++){
-      console.log(skips[i].date.toDate())
       let newDate = skips[i].date.toDate().toDateString();
       let found = dates.filter((item) => {return(item.date === newDate)});
       if(found.length > 0){
@@ -114,18 +111,11 @@ function Main(){
         dates[index].count += parseInt(skips[i].count)
       }else{
         sum = parseInt(skips[i].count);
-        dates.push({date: newDate, count: sum});
-        
+        dates.push({date: newDate, count: sum}); 
       }
-
     }
     setRows(dates)
   }
-
-  useEffect(() => {
-    console.log(imageAsFile)
-    
-  }, [imageAsFile])
 
   return(
     <div style={{justifyContent: 'center', alignContent: 'center', backgroundColor: "#eee", width: "60%", margin:"1em auto", padding: "1em"}}>
